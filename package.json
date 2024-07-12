@@ -2,13 +2,14 @@
   "name": "sorteio-websocket",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "type": "module",
+  "main": "server.js",
+  "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "node --watch ./server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Kaik",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
