@@ -19,6 +19,8 @@ function handleSocketMessage(event){
 
     if(data.action === ACTIONS.CLIENT_COUNT_UPDATE){
         updateClientCount(data.count)
+    } else if(data.action === ACTIONS.SET_ROOM){
+        console.log(data.id)
     }
 }
 

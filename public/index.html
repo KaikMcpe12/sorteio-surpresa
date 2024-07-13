@@ -10,12 +10,24 @@
 
   <body class="main">
     <h1>Sorteio Surpresa</h1>
-    <form action="">
-      <input type="text" name="name" id="nameUser" placeholder="Digite seu nome">
+    <form action="" id="form">
+      <input type="text" name="nameUser" id="name-user" placeholder="Digite seu nome" required>
+      <div class="type-user">
+        <input type="radio" name="typeUser" id="type-user" value="admin" required>Admin
+        <input type="radio" name="typeUser" id="type-user" value="client">Cliente
+      </div>
       <button type="submit" id="btn-form" >Entrar</button>
     </form>
+
+    <dialog class="modal" id="modal">
+      <div class="content">
+        <button class="close-modal" id="close-modal">X</button>
+        <input type="number" id="id-room" placeholder="Digite o id da sala" required>
+        <button type="submit" id="btn-modal" >Criar</button>
+      </div>
+    </dialog>
     
     <script src="public/js/config.js"></script>
-    <!-- <script src="public/js/client.js"></script> -->
+    <script src="public/js/index.js"></script>
   </body>
 </html>

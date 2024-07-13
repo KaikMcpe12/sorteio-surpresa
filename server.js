@@ -1,40 +1,43 @@
-const express = require("express");
-const http = require("http");
-const WebSocket = require("ws");
-const dotenv = require("dotenv");
+import express from 'express';
+import http from 'http';
+import WebSocket, {WebSocketServer} from 'ws';
+import dotenv from 'dotenv'
+
+//Caminho da pasta
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 dotenv.config()
-
+//Configuração do servidor 
 const app = express()
 const server = http.createServer(app)
 
-const wss = new WebSocket.Server({ server })
+const wss = new WebSocketServer({ server })
 
 const PORT = process.env.PORT
 const URL = process.env.URL+`:${PORT}`
+//Variáveis importantes
+let clients = []
+let rooms = []
 
 const ACTIONS = {
     ADMIN: 'admin',
     DRAW: 'draw',
-    CLIENT_COUNT_UPDATE: 'clientCountUpdate'
+    CLIENT_COUNT_UPDATE: 'clientCountUpdate',
+    SETROOM: 'setRoom',
 }
 
 app.use('/public', express.static('public'))
 app.get('/', (req, res) => res.sendFile(__dirname + '/public/index.html'))
-app.get('/client', (req, res) => res.sendFile(__dirname + '/public/client.html'))
-app.get('/admin', (req, res) => res.sendFile(__dirname + '/public/admin.html'))
+app.get('/client/:idRoom/:name', (req, res) => res.sendFile(__dirname + '/public/client.html'))
+app.get('/admin/:idRoom/:name', (req, res) => res.sendFile(__dirname + '/public/admin.html'))
 
-server.listen(PORT, () => {
-    console.log(`Server is running on ${URL} !`)
-})
-
-let clients = []
 
 wss.on('connection', (ws) => {
-    clients.push(ws)
     updateAdminClientCount()
     ws.on('close', () => {
-        clients = clients.filter((client) => client !== ws)
         updateAdminClientCount()
     })
 
@@ -44,10 +47,11 @@ wss.on('connection', (ws) => {
 function handleIncomingMessage(ws, msg) {
     const data = JSON.parse(msg)
     const action = data.action
-  
+
     switch (action) {
       case ACTIONS.ADMIN:
         ws.isAdmin = true
+        setRoom(ws)
         updateAdminClientCount()//Limpar as constantes chamadas de funções
         break;
       case ACTIONS.DRAW:
@@ -77,7 +81,6 @@ function updateAdminClientCount(){
     const clientCount = Array.from(wss.clients).filter(
         (client) => !client.isAdmin 
     ).length
-    console.log(Array.from(wss.clients).length)
 
     Array.from(wss.clients).forEach((client) => {
         if(client.isAdmin && client.readyState === WebSocket.OPEN){
@@ -90,3 +93,19 @@ function updateAdminClientCount(){
         }
     })
 }
+
+function setRoom(ws){
+    if(ws.isAdmin){
+        console.log(rooms)
+        ws.send(
+            JSON.stringify({
+                action: ACTIONS.SETROOM,
+                id: ws.roomId,
+            })
+        )
+    }
+}
+
+server.listen(PORT, () => {
+    console.log(`Server is running on ${URL} !`)
+})
