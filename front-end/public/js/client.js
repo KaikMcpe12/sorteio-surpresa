@@ -1,5 +1,4 @@
 let socket = new WebSocket(WS_URL)
-console.log(WS_URL)
 const body = document.querySelector('body')
 const logo = document.getElementById('logo')
 const messageDiv = document.getElementById('message')

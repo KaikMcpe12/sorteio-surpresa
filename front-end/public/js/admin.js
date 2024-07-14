@@ -16,7 +16,7 @@ function handleSocketOpen(){
 
 function handleSocketMessage(event){
     const data = JSON.parse(event.data)
-
+    
     if(data.action === ACTIONS.CLIENT_COUNT_UPDATE){
         updateClientCount(data.count)
     } else if(data.action === ACTIONS.SET_ROOM){

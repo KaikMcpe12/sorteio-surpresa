@@ -3,11 +3,11 @@ import http from 'http';
 import WebSocket, {WebSocketServer} from 'ws';
 import dotenv from 'dotenv'
 
-//Caminho da pasta
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+// //Caminho da pasta
+// import { dirname } from 'path';
+// import { fileURLToPath } from 'url';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+// const __dirname = dirname(fileURLToPath(import.meta.url));
 
 dotenv.config()
 //Configuração do servidor 
@@ -40,7 +40,6 @@ wss.on('connection', (ws) => {
     ws.on('close', () => {
         updateAdminClientCount()
     })
-
     ws.on('message', handleIncomingMessage.bind(null, ws))
 })
 
@@ -51,7 +50,6 @@ function handleIncomingMessage(ws, msg) {
     switch (action) {
       case ACTIONS.ADMIN:
         ws.isAdmin = true
-        setRoom(ws)
         updateAdminClientCount()//Limpar as constantes chamadas de funções
         break;
       case ACTIONS.DRAW:
@@ -94,17 +92,17 @@ function updateAdminClientCount(){
     })
 }
 
-function setRoom(ws){
-    if(ws.isAdmin){
-        console.log(rooms)
-        ws.send(
-            JSON.stringify({
-                action: ACTIONS.SETROOM,
-                id: ws.roomId,
-            })
-        )
-    }
-}
+// function setRoom(ws){
+//     if(ws.isAdmin){
+//         // console.log(rooms)
+//         ws.send(
+//             JSON.stringify({
+//                 action: ACTIONS.SETROOM,
+//                 id: ws.roomId,
+//             })
+//         )
+//     }
+// }
 
 server.listen(PORT, () => {
     console.log(`Server is running on ${URL} !`)
